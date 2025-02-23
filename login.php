@@ -1,3 +1,36 @@
+<?php
+require 'includes/database.php';
+session_start();
+
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1); // Enable if using HTTPS
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'];
+
+   // After successful login
+$stmt = $pdo->prepare("SELECT role FROM users WHERE email = ?");
+$stmt->execute([$email]);
+$user = $stmt->fetch();
+
+if ($user['role'] === 'tutor') {
+    header("Location: tutor-dashboard.php");
+} else {
+    header("Location: student-dashboard.php");
+}
+        // Regenerate session ID to prevent fixation
+        session_regenerate_id(true);
+        
+        header("Location: dashboard.php");
+        exit();
+    } else {
+        $error = "Invalid email or password";
+    }
+}
+?>
+<!-- Your existing login form -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,7 +94,7 @@
                 <button type="submit" class="btn">Login</button>
                 
                 <div class="auth-footer">
-                    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+                    <p>Don't have an account? <a href="signup.php">Sign Up</a></p>
                     <a href="forgot-password.html">Forgot Password?</a>
                 </div>
             </form>
