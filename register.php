@@ -1,18 +1,17 @@
-<?php include('includes/header.php'); ?>
-
 <?php
+session_start();
+require_once 'includes/config.php';
+require_once 'includes/functions.php';
+include('includes/header.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once 'includes/config.php';
-    require_once 'includes/functions.php';
-
-    // Common validation
-    $role = $_POST['role'];
-    $reg_number = clean_input($_POST['reg_number']);
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $phone = clean_input($_POST['phone']);
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
     try {
+        // Common validation
+        $role = $_POST['role'];
+        $reg_number = clean_input($_POST['reg_number']);
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $phone = clean_input($_POST['phone']);
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
         // Insert user
         $stmt = $pdo->prepare("INSERT INTO users (role, reg_number, email, phone, password, year, semester)
                              VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -25,12 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($role === 'tutor') {
             // Handle transcript upload
-            $transcript_path = handle_file_upload('transcript', 'transcripts/');
-            
+            $upload_result = handle_file_upload('transcript', 'transcripts/');
+            if (isset($upload_result['error'])) {
+                throw new Exception($upload_result['error']);
+            }
+
             // Insert tutor application
             $stmt = $pdo->prepare("INSERT INTO tutor_applications (tutor_id, transcript_path)
                                   VALUES (?, ?)");
-            $stmt->execute([$user_id, $transcript_path]);
+            $stmt->execute([$user_id, $upload_result['path']]);
 
             // Process subjects
             $subjects = array_map('trim', explode(',', $_POST['subjects']));
@@ -43,23 +45,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Redirect to login
-        header("Location: login.php?registered=1");
+        // Set session and redirect
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['role'] = $role;
+        $_SESSION['email'] = $email;
+
+        // Debug: Check if user exists
+$stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch();
+
+echo "<pre>Debug Info:\n";
+echo "User ID: " . $user_id . "\n";
+echo "Session Role: " . $_SESSION['role'] . "\n";
+echo "Database Record: " . print_r($user, true) . "\n";
+echo "</pre>";
+exit(); // Temporarily halt redirect
+
+        $redirect = ($role === 'tutor') ? 'tutor/dashboard.php' : 'student/dashboard.php';
+        header("Location: $redirect");
         exit();
 
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         $error = "Registration failed: " . $e->getMessage();
     }
-}
-
-function clean_input($data) {
-    return htmlspecialchars(stripslashes(trim($data)));
-}
-
-function handle_file_upload($field, $target_dir) {
-    // Add proper file upload handling
-    // Return file path
-}
+} 
+?>
 ?>
 
 <main class="auth-container">

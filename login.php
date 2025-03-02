@@ -1,54 +1,38 @@
-<?php include('includes/header.php'); ?>
-
 <?php
+session_start();
+require_once 'includes/config.php';
+include('includes/header.php');
+require_once 'includes/functions.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once 'includes/config.php';
-    
-    if (isset($_POST['role'])) { // Registration processing
-        // Validate and sanitize inputs
-        $role = $_POST['role'];
-        $reg_number = filter_var($_POST['reg_number'], FILTER_SANITIZE_STRING);
-        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-        $phone = filter_var($_POST['phone'], FILTER_SANITIZE_STRING);
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        
-        // Insert into users table
-        $stmt = $pdo->prepare("INSERT INTO users (role, reg_number, email, phone, password, year, semester) 
-                              VALUES (?, ?, ?, ?, ?, ?, ?)");
-        
-        // Handle tutor-specific fields
-        if ($role === 'tutor') {
-            // Handle file upload
-            $transcript = uploadTranscript($_FILES['transcript']);
-            
-            // Insert tutor subjects
-            $subjects = $_POST['subjects'];
-        }
-        
-        // Redirect to appropriate dashboard
-        header("Location: $role/dashboard.php");
-        exit();
-    }
-    else { // Login processing
-        // Validate credentials
+    try {
+        $reg_number = $_POST['reg_number'];
+        $password = $_POST['password'];
+
         $stmt = $pdo->prepare("SELECT * FROM users WHERE reg_number = ?");
-        $stmt->execute([$_POST['reg_number']]);
+        $stmt->execute([$reg_number]);
         $user = $stmt->fetch();
-        
-        if ($user && password_verify($_POST['password'], $user['password'])) {
-            session_start();
+
+        if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['role'] = $user['role'];
+            
+            // Debug: Confirm session
+            echo "<pre>Login Success:\n";
+            print_r($_SESSION);
+            echo "</pre>";
+            
+            // Redirect
             header("Location: {$user['role']}/dashboard.php");
             exit();
+        } else {
+            die("Invalid credentials!");
         }
+    } catch (PDOException $e) {
+        die("Login Error: " . $e->getMessage());
     }
 }
-
-function uploadTranscript($file) {
-    // Add file upload validation and handling
-}
-?>
+?> 
 
 <main class="auth-container">
     <form class="login-form" method="POST">
