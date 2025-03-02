@@ -1,4 +1,15 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Debug information
+echo "<pre>";
+echo "Current directory: " . __DIR__ . "\n";
+echo "Session status: " . session_status() . "\n";
+echo "Session data: ";
+print_r($_SESSION);
+echo "</pre>";
 session_start();
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
@@ -13,9 +24,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
 $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $student = $stmt->fetch();
+
+// Include header
+include '../includes/header.php'; ?>
 ?>
 
-<?php include '../includes/header.php'; ?>
 
 <div class="dashboard-container">
     <div class="profile-header">

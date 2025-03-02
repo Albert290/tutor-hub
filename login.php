@@ -1,7 +1,6 @@
 <?php
 session_start();
-require_once 'includes/config.php';
-include('includes/header.php');
+require_once 'includes/config.php'; 
 require_once 'includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,6 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Login Error: " . $e->getMessage());
     }
 }
+// Include header
+include('includes/header.php');
 ?> 
 
 <main class="auth-container">
