@@ -1,51 +1,72 @@
-<?php
-require 'includes/header.php';
-$page_title = 'Home';
-?>
-  <!-- Hero Section -->
-  <section class="hero" id="home">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub Connect | Student Tutor Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<?php include('includes/header.php'); ?>
+   <!-- Hero Section -->
+<section class="hero" id="home">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Connect, Learn, and Succeed.</h1>
+            <p>Find expert tutors in your course units or share your knowledge with peers</p>
+            <div class="search-container">
+                <input type="text" id="unitSearch" placeholder="Search for a unit...">
+                <button class="btn" id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+        </div> 
+        <!-- In your hero section -->
+<div class="hero-illustration">
+    <img src="assets/images/pexels-yankrukov-8199656.jpg" alt="Learning illustration" class="hero-image">
+</div>
+    </div>
+</section>
+
+ <!-- Mission Section -->
+    <section class="mission">
         <div class="container">
-            <div class="hero-content">
-                <h1>Tharaka University Tutor Hub</h1>
-                <p>Find expert tutors in your course units or share your knowledge with peers</p>
-                <form method="GET" action="search.php" class="search-container">
-                    <input type="text" id="unitSearch" placeholder="Search for a unit..." 
-                           value="<?= htmlspecialchars($_GET['unit'] ?? '') ?>">
-                    <button type="submit" class="btn" id="searchBtn"><i class="fas fa-search"></i></button>
-                </form>
+            <div class="mission-grid">
+                <div class="mission-content">
+                    <h2>Our Mission</h2>
+                    <p>At StudyHub Connect, we believe in the power of peer-to-peer learning. Our platform bridges the gap between academic challenge and student success by connecting those who need help with those who can provide it.</p>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 data-count="21">0</h3>
+                            <p>Active Tutors</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 data-count="40">0</h3>
+                            <p>Success Rate</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 data-count="52">0</h3>
+                            <p>Courses Covered</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
- <!-- Mission Section -->
- <section class="mission">
-    <div class="container">
-        <div class="mission-grid">
-            <div class="mission-content">
-                <h2>Our Mission</h2>
-                <p>At StudyHub Connect, we believe in the power of peer-to-peer learning. Our platform bridges the gap between academic challenge and student success by connecting those who need help with those who can provide it.</p>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3 data-count="21">0</h3>
-                        <p>Active Tutors</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 data-count="40">0</h3>
-                        <p>Success Rate</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 data-count="52">0</h3>
-                        <p>Courses Covered</p>
-                    </div>
-                </div>
-            </div>
-            <!-- In your hero section -->
-            <div class="hero-illustration">
-                <img src="images/hero.jpg" alt="Learning illustration" class="hero-image">
+
+    <!-- About Hero Section -->
+    <section class="about-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Empowering Student Success Through Peer Learning</h1>
+                <p>Connecting knowledge seekers with academic mentors</p>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+   
 
     <!-- Features Section -->
     <section class="features" id="features">
@@ -67,13 +88,6 @@ $page_title = 'Home';
                     <h3>Flexible Scheduling</h3>
                     <p>Book sessions at your convenience</p>
                 </div>
-                <div class="feature-card">
-                    <i class="fas fa-clock"></i>
-                    <i class="fas fa-money-bill-wave"></i> <!-- Cheap icon -->
-                    <h3>Free of charge</h3>
-                    <p>Learn without having to pay</p>
-                </div>
-                
             </div>
         </div>
     </section>
@@ -82,39 +96,12 @@ $page_title = 'Home';
     <section class="tutor-results" id="search">
         <div class="container">
             <h2>Available Tutors</h2>
-            <div class="results-grid">
-                <?php
-                if(isset($_GET['unit'])) {
-                    $unit = '%' . $_GET['unit'] . '%';
-                    $stmt = $pdo->prepare("SELECT u.fullname, t.*, GROUP_CONCAT(units.unit_code SEPARATOR ', ') AS expertise 
-                                         FROM tutors t
-                                         JOIN users u ON t.tutor_id = u.user_id
-                                         JOIN tutor_units tu ON t.tutor_id = tu.tutor_id
-                                         JOIN units ON tu.unit_id = units.unit_id
-                                         WHERE units.unit_code LIKE ?
-                                         GROUP BY t.tutor_id");
-                    $stmt->execute([$unit]);
-                    
-                    while($tutor = $stmt->fetch()) {
-                ?>
-                <div class="tutor-card">
-                    <h3><?= htmlspecialchars($tutor['fullname']) ?></h3>
-                    <p class="expertise"><?= htmlspecialchars($tutor['expertise']) ?></p>
-                    <div class="rating">
-                        <?php
-                        $avg_rating = $pdo->query("SELECT AVG(rating_value) FROM ratings WHERE tutor_id = {$tutor['tutor_id']}")->fetchColumn();
-                        echo str_repeat('★', round($avg_rating));
-                        ?>
-                    </div>
-                    <a href="tutor_profile.php?id=<?= $tutor['tutor_id'] ?>" class="btn">View Profile</a>
-                </div>
-                <?php
-                    } // Close while loop
-                } // Close if statement
-                ?>
+            <div class="results-grid" id="tutorResults">
+                <!-- Tutor cards will be dynamically inserted here -->
             </div>
         </div>
     </section>
+
     <!-- Registration Modals -->
     <div class="modal" id="registrationModal">
         <div class="modal-content">
@@ -142,38 +129,6 @@ $page_title = 'Home';
             </form>
         </div>
     </div>
-
-  <!-- FAQ Section -->
-<section class="faq" id="faq">
-    <div class="container">
-        <h2>Frequently Asked Questions</h2>
-        <div class="faq-grid">
-            <!-- FAQ Item 1 -->
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>How do I become a tutor?</h3>
-                    <span class="toggle-icon">+</span>
-                </div>
-                <div class="faq-answer">
-                    <p>To become a tutor, register with your academic credentials and select the units you're proficient in. Our team will verify your qualifications within 48 hours.</p>
-                </div>
-            </div>
-
-            <!-- FAQ Item 2 -->
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>What subjects are available?</h3>
-                    <span class="toggle-icon">+</span>
-                </div>
-                <div class="faq-answer">
-                    <p>We cover all major university subjects including Computer Science, Engineering, Mathematics, Business, and more. Check our course catalog for full details.</p>
-                </div>
-            </div>
-
-            <!-- Add more FAQ items following the same structure -->
-        </div>
-    </div>
-</section>
 
     <script src="assets/js/script.js"></script>
 </body>

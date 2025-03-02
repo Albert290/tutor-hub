@@ -1,7 +1,3 @@
-<?php
-session_start();
-require 'database.php';
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +9,7 @@ require 'database.php';
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-    <!-- Navigation --> 
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <a href="#" class="logo">StudyHub<span>Connect</span></a>
@@ -23,13 +19,8 @@ require 'database.php';
                 <a href="#features">Features</a>
                 <a href="#search">Find Tutors</a>
                 <div class="auth-buttons">
-                    <?php if(isset($_SESSION['user_id'])): ?>
-                        <a href="dashboard.php" class="btn">Dashboard</a>
-                        <a href="logout.php" class="btn outline">Logout</a>
-                    <?php else: ?>
-                        <a href="signup.php" class="btn">Sign Up</a>
-                        <a href="login.php" class="btn outline">Login</a>
-                    <?php endif; ?>
+                    <button class="btn" id="signUpBtn">Sign Up</button>
+                    <button class="btn outline" id="loginBtn">Login</button>
                 </div>
             </div>
             
@@ -39,4 +30,15 @@ require 'database.php';
                 <span class="bar"></span>
             </button>
         </div>
-    </nav>
+    </nav> 
+
+    <script>
+        // Add click handlers for the buttons
+        document.getElementById('signUpBtn').addEventListener('click', () => {
+            window.location.href = 'register.php';
+        });
+        
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            window.location.href = 'login.php';
+        });
+    </script>
