@@ -19,10 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       (role, reg_number, email, phone, password, year_of_study, semester)
                       VALUES (?, ?, ?, ?, ?, ?, ?)");
         
-        $year = $_POST['year'];
+        // To:
+        $year_of_study = $_POST['year'];
         $semester = ($role === 'student') ? $_POST['semester'] : null;
 
-        $stmt->execute([$role, $reg_number, $email, $phone, $password, $year, $semester]);
+        // Corrected
+        $stmt->execute([$role, $reg_number, $email, $phone, $password, $year_of_study, $semester]);
         $user_id = $pdo->lastInsertId();
 
         if ($role === 'tutor') {
@@ -79,7 +81,14 @@ if (!ob_get_level()) {
 // Include header
 include('includes/header.php');
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
 <main class="auth-container">
     <?php if (!empty($error)): ?>
         <div class="error-message" style="color: red; padding: 10px; margin-bottom: 20px; background-color: #ffeeee; border: 1px solid #ffcccc; border-radius: 5px;">
@@ -171,7 +180,7 @@ include('includes/header.php');
             <input type="password" name="password" placeholder="Password" required>
         </div>
         <div class="form-group">
-            <select name="year" required>
+        <select name="year_of_study" required>
                 <option value="">Current Year of Study</option>
                 <option value="2">Second Year</option>
                 <option value="3">Third Year</option>
@@ -192,6 +201,7 @@ Example: Advanced Mathematics, Physics 101, Organic Chemistry"
         <button type="submit" class="btn">Apply as Tutor</button>
     </form>
 </main>
+</body>
 
 <script>
 function selectRole(role) {

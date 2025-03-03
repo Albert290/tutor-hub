@@ -3,13 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Debug information
-echo "<pre>";
-echo "Current directory: " . __DIR__ . "\n";
-echo "Session status: " . session_status() . "\n";
-echo "Session data: ";
-print_r($_SESSION);
-echo "</pre>";
+
 session_start();
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
