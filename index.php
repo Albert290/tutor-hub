@@ -23,7 +23,7 @@ if(isset($_GET['unitSearch'])) {
     $searchTerm = '%' . trim($_GET['unitSearch']) . '%';
     
     try {
-        // Prepare the SQL statement
+        // Prepare the SQL statement to search in tutor_subjects table, subject_name column
         $stmt = $pdo->prepare("SELECT * FROM tutor_subjects WHERE subject_name LIKE :searchTerm");
         
         // Bind the parameter
@@ -37,7 +37,7 @@ if(isset($_GET['unitSearch'])) {
         
         // Set message based on search results
         if (empty($searchResults)) {
-            $searchMessage = "No units found matching your search: " . htmlspecialchars($_GET['unitSearch']);
+            $searchMessage = "No subjects found matching your search: " . htmlspecialchars($_GET['unitSearch']);
         }
     } catch(PDOException $e) {
         $searchMessage = "Search error: " . $e->getMessage();
@@ -52,7 +52,7 @@ if(isset($_GET['unitSearch'])) {
             <p>Find expert tutors in your course units or share your knowledge with peers</p>             
             
             <form method="GET" class="search-container">                 
-                <input type="text" name="unitSearch" id="unitSearch" placeholder="Search for a unit..." required>                 
+                <input type="text" name="unitSearch" id="unitSearch" placeholder="Search for a subject..." required>                 
                 <button type="submit" class="btn" id="searchBtn"><i class="fas fa-search"></i></button>             
             </form>                          
             
@@ -66,16 +66,20 @@ if(isset($_GET['unitSearch'])) {
                 <div class="search-results">
                     <h3>Search Results:</h3>                    
                     <?php foreach($searchResults as $subject): ?>                         
-                        <div class="subject result">                             
+                        <div class="subject-result">                             
                             <?php if(is_logged_in()): ?>                                 
-                                <a href="unit.php?id=<?php echo htmlspecialchars($unit['id']); ?>">                                     
-                                <?php echo htmlspecialchars($subject['subject_name']); ?>                               
-                                </a>                             
-                                <?php else: ?>                                 
-                                <span class="subject-locked" onclick="openLoginModal()">                                     
+                                <?php if(!empty($subject['id'])): ?>
+                                    <a href="unit.php?id=<?php echo htmlspecialchars($subject['id']); ?>">                                     
+                                        <?php echo htmlspecialchars($subject['subject_name']); ?>                                 
+                                    </a>
+                                <?php else: ?>
+                                    <span><?php echo htmlspecialchars($subject['subject_name']); ?> (No details available)</span>
+                                <?php endif; ?>                             
+                            <?php else: ?>                                 
+                                <span class="subject-locked" data-subject-name="<?php echo htmlspecialchars($subject['subject_name']); ?>">                                     
                                     <?php echo htmlspecialchars($subject['subject_name']); ?>                                     
                                     <i class="fas fa-lock"></i>                                 
-                                </span>                                 
+                                </span>                                          
                             <?php endif; ?>                         
                         </div>                     
                     <?php endforeach; ?>                 
@@ -90,6 +94,15 @@ if(isset($_GET['unitSearch'])) {
 
     </div>
 </section>
+
+<div id="loginPromptModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
+    <div class="modal-content" style="background-color:white; margin:15% auto; padding:20px; border-radius:5px; width:300px; text-align:center;">
+        <h2>Access Restricted</h2>
+        <p id="subjectNameDisplay"></p>
+        <p>Please <a href="register.php" onclick="window.location.href='register.php'">login</a> or <a href="signup.php" onclick="window.location.href='register.php'">register</a> to access this subject.</p>
+        <button onclick="closeLoginPrompt()">Close</button>
+    </div>
+</div>
 
 <!-- How It Works Section -->
 <section class="how-it-works">
@@ -228,6 +241,7 @@ if(isset($_GET['unitSearch'])) {
     </div>
 </div>
     </section>
+
     <script>
 function openLoginModal() {
     // Assuming you have a function to open login modal
@@ -235,13 +249,44 @@ function openLoginModal() {
     // You might want to replace this with your actual modal opening method
     // For example: document.getElementById('loginModal').style.display = 'block';
 }
-        function showLoginPrompt() {
-    const modal = document.getElementById('loginModal');
-    modal.style.display = 'block';
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click event to locked subjects
+    document.querySelectorAll('.subject-locked').forEach(function(element) {
+        element.addEventListener('click', function() {
+            // Get subject name
+            var subjectName = this.getAttribute('data-subject-name');
+            
+            // Display subject name in modal
+            document.getElementById('subjectNameDisplay').textContent = 
+                'Subject: ' + subjectName;
+            
+            // Show login prompt modal
+            document.getElementById('loginPromptModal').style.display = 'block';
+        });
+    });
+});
+
+function openLoginModal() {
+    // Close current modal
+    document.getElementById('loginPromptModal').style.display = 'none';
+    
+    // Assuming you have a way to open login modal
+    // This might be a custom function or setting display of a login modal
+    window.location.href = 'login.php';
 }
 
-// Modify your existing modal close functionality as needed
-     </script>
+function openRegistrationModal() {
+    // Close current modal
+    document.getElementById('loginPromptModal').style.display = 'none';
+    
+    // Redirect to registration
+    window.location.href = 'register.php';
+}
+
+function closeLoginPrompt() {
+    document.getElementById('loginPromptModal').style.display = 'none';
+}
+</script> 
 
     <script src="assets/js/script.js"></script>
 </body>
