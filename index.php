@@ -10,24 +10,117 @@
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-<?php include('includes/header.php'); ?>
-   <!-- Hero Section -->
-<section class="hero" id="home">
-    <div class="container">
-        <div class="hero-content">
-            <h1>Connect, Learn, and Succeed.</h1>
-            <p>Find expert tutors in your course units or share your knowledge with peers</p>
-            <div class="search-container">
-                <input type="text" id="unitSearch" placeholder="Search for a unit...">
-                <button class="btn" id="searchBtn"><i class="fas fa-search"></i></button>
-            </div>
-        </div> 
+<?php 
+include('includes/header.php');
+include('includes/config.php');
+include('includes/functions.php');
+
+// Process search 
+$searchResults = []; 
+$searchMessage = ''; // Variable to store search feedback
+
+if(isset($_GET['unitSearch'])) {     
+    $searchTerm = '%' . trim($_GET['unitSearch']) . '%';
+    
+    try {
+        // Prepare the SQL statement
+        $stmt = $pdo->prepare("SELECT * FROM tutor_subjects WHERE subject_name LIKE :searchTerm");
+        
+        // Bind the parameter
+        $stmt->bindParam(':searchTerm', $searchTerm, PDO::PARAM_STR);
+        
+        // Execute the query
+        $stmt->execute();
+        
+        // Fetch all results
+        $searchResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Set message based on search results
+        if (empty($searchResults)) {
+            $searchMessage = "No units found matching your search: " . htmlspecialchars($_GET['unitSearch']);
+        }
+    } catch(PDOException $e) {
+        $searchMessage = "Search error: " . $e->getMessage();
+    }
+} 
+?>
+
+<section class="hero" id="home">     
+    <div class="container">         
+        <div class="hero-content">             
+            <h1>Tharaka University Tutors Hub.</h1>             
+            <p>Find expert tutors in your course units or share your knowledge with peers</p>             
+            
+            <form method="GET" class="search-container">                 
+                <input type="text" name="unitSearch" id="unitSearch" placeholder="Search for a unit..." required>                 
+                <button type="submit" class="btn" id="searchBtn"><i class="fas fa-search"></i></button>             
+            </form>                          
+            
+            <?php if(!empty($searchMessage)): ?>
+                <div class="search-message alert alert-info">
+                    <?php echo $searchMessage; ?>
+                </div>
+            <?php endif; ?>
+            
+            <?php if(!empty($searchResults)): ?>                 
+                <div class="search-results">
+                    <h3>Search Results:</h3>                    
+                    <?php foreach($searchResults as $subject): ?>                         
+                        <div class="subject result">                             
+                            <?php if(is_logged_in()): ?>                                 
+                                <a href="unit.php?id=<?php echo htmlspecialchars($unit['id']); ?>">                                     
+                                <?php echo htmlspecialchars($subject['subject_name']); ?>                               
+                                </a>                             
+                                <?php else: ?>                                 
+                                <span class="subject-locked" onclick="openLoginModal()">                                     
+                                    <?php echo htmlspecialchars($subject['subject_name']); ?>                                     
+                                    <i class="fas fa-lock"></i>                                 
+                                </span>                                 
+                            <?php endif; ?>                         
+                        </div>                     
+                    <?php endforeach; ?>                 
+                </div>             
+            <?php endif; ?>         
+        </div>
+        <div class="hero-illustration">
+           <img src="assets/images/pexels-yankrukov-8199656.jpg" alt="Learning illustration" class="hero-image">
+        </div>     
+     </div> 
         <!-- In your hero section -->
-<div class="hero-illustration">
-    <img src="assets/images/pexels-yankrukov-8199656.jpg" alt="Learning illustration" class="hero-image">
-</div>
+
     </div>
 </section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <div class="container">
+        <h2>How Tutor Hub Works</h2>
+        <div class="steps-grid">
+            <div class="step">
+                <i class="fas fa-user-plus"></i>
+                <h3>1. Sign Up</h3>
+                <p>Create your free account and set up your profile.</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-search"></i>
+                <h3>2. Find a Tutor</h3>
+                <p>Search by subject or tutor expertise and send requests.</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3>3. Start Learning</h3>
+                <p>Schedule a session and begin learning with your tutor.</p>
+            </div>
+        </div>
+        <div class="auth-cta">
+    <h3>Get Started Today</h3>
+    <p>Join our academic community to unlock personalized learning support</p>
+    <div class="cta-buttons">
+        <button class="btn btn-primary" onclick="window.location.href='register.php'">Create Account</button> 
+    </div>
+</div>
+</section>
+
 
  <!-- Mission Section -->
     <section class="mission">
@@ -35,7 +128,7 @@
             <div class="mission-grid">
                 <div class="mission-content">
                     <h2>Our Mission</h2>
-                    <p>At StudyHub Connect, we believe in the power of peer-to-peer learning. Our platform bridges the gap between academic challenge and student success by connecting those who need help with those who can provide it.</p>
+                    <p>At Tutor Hub, we believe in the power of peer-to-peer learning. Our platform bridges the gap between academic challenge and student success by connecting those who need help with those who can provide it.</p>
                     <div class="stats-grid">
                         <div class="stat-card">
                             <h3 data-count="21">0</h3>
@@ -56,16 +149,36 @@
     </section>
 
 
-    <!-- About Hero Section -->
-    <section class="about-hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Empowering Student Success Through Peer Learning</h1>
-                <p>Connecting knowledge seekers with academic mentors</p>
+  <!-- Success Stories & Testimonials -->
+<section class="testimonials">
+    <div class="container">
+        <h2>What Our Students Say</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <p>"Thanks to Tutor Hub, I finally passed my Calculus exam!"</p>
+                <h4>— Jane, 2nd Year Computer Science</h4>
+            </div>
+            <div class="testimonial-card">
+                <p>"Becoming a tutor helped me earn extra cash while helping others."</p>
+                <h4>— Mark, 3rd Year Business Studies</h4>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
+<section class="faq">
+    <div class="containerr">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <h3>Is Tutor Hub free?</h3>
+            <p>Yes! Students can browse and connect with tutors for free. Some tutors may charge fees for advanced sessions.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Can I become a tutor?</h3>
+            <p>Yes! If you have expertise in a subject, you can apply to become a tutor and help others.</p>
+        </div>
+    </div>
+</section>
    
 
     <!-- Features Section -->
@@ -88,47 +201,47 @@
                     <h3>Flexible Scheduling</h3>
                     <p>Book sessions at your convenience</p>
                 </div>
+                <div class="feature-card">
+                    <i class="fas fa-comments"></i>
+                    <h3>Direct Communication</h3>
+                    <p>Securely message tutors, schedule sessions, and track your learning progress through your personal dashboard</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Personalized Matching</h3>
+                    <p>Login to access our smart matching system that connects you with ideal tutors/students based on your courses and needs</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure Academic Network</h3>
+                    <p>We maintain a verified university community to ensure quality interactions and protect your academic integrity</p>
+                </div>
             </div>
         </div>
-    </section>
-
-    <!-- Tutor Results Section -->
-    <section class="tutor-results" id="search">
-        <div class="container">
-            <h2>Available Tutors</h2>
-            <div class="results-grid" id="tutorResults">
-                <!-- Tutor cards will be dynamically inserted here -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Registration Modals -->
-    <div class="modal" id="registrationModal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Join StudyHub Connect</h2>
-            <div class="form-toggle">
-                <button class="toggle-btn active" id="studentToggle">Student</button>
-                <button class="toggle-btn" id="tutorToggle">Tutor</button>
-            </div>
-            <form id="registrationForm">
-                <div class="form-group">
-                    <input type="text" id="fullName" placeholder="Full Name" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" id="email" placeholder="University Email" required>
-                </div>
-                <div class="form-group tutor-field">
-                    <select id="units" multiple>
-                        <option value="unit1">Computer Science 101</option>
-                        <option value="unit2">Mathematics for Engineers</option>
-                        <option value="unit3">Business Statistics</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Create Account</button>
-            </form>
-        </div>
+        
+        <div class="auth-cta">
+    <h3>Get Started Today</h3>
+    <p>Join our academic community to unlock personalized learning support</p>
+    <div class="cta-buttons">
+        <button class="btn btn-primary" onclick="window.location.href='register.php'">Create Account</button>
+        <button class="btn btn-secondary">Learn More</button>
     </div>
+</div>
+    </section>
+    <script>
+function openLoginModal() {
+    // Assuming you have a function to open login modal
+    alert('Please login to access unit details');
+    // You might want to replace this with your actual modal opening method
+    // For example: document.getElementById('loginModal').style.display = 'block';
+}
+        function showLoginPrompt() {
+    const modal = document.getElementById('loginModal');
+    modal.style.display = 'block';
+}
+
+// Modify your existing modal close functionality as needed
+     </script>
 
     <script src="assets/js/script.js"></script>
 </body>

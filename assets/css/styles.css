@@ -31,7 +31,7 @@ body {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-    position: fixed;
+    position: relative;
     width: 100%;
     z-index: 1000;
     transition: all 0.3s ease;
@@ -843,6 +843,7 @@ input, select, textarea {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 1rem;
+    margin-top: 80px;
 }
 
 .profile-header {
@@ -1186,3 +1187,236 @@ input, select, textarea {
     }
 }
 
+/* Auth CTA Styling */
+.auth-cta {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-top: 3rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-cta h3 {
+    color: #2a2d3b;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.auth-cta p {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background-color: #3f51b5;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
+}
+
+.btn-secondary {
+    background-color: #e9ecef;
+    color: #2a2d3b;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #dee2e6;
+}
+
+@media (max-width: 768px) {
+    .auth-cta {
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        width: 50%;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+
+/* index sections*/
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+.containerr {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 0;
+}
+h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* How It Works Section */
+.how-it-works {
+    background: #fff;
+    padding: 50px 0;
+    text-align: center;
+}
+.steps-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.step {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    transition: transform 0.3s ease-in-out;
+}
+.step i {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+.step:hover {
+    transform: translateY(-5px);
+    background: #007bff;
+    color: #fff;
+}
+.step:hover i {
+    color: #fff;
+}
+
+/* Testimonials Section */
+.testimonials {
+    background: #007bff;
+    color: white;
+    padding: 50px 0;
+    text-align: center;
+}
+.testimonial-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.testimonial-card {
+    background: white;
+    color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 40%;
+    transition: transform 0.3s;
+}
+.testimonial-card:hover {
+    transform: scale(1.05);
+}
+
+/* FAQ Section */
+.faq {
+    background: #fff;
+    padding: 50px 0;
+}
+.faq-item {
+    background: #f9f9f9;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s;
+}
+.faq-item h3 {
+    margin: 0;
+}
+.faq-item p {
+    display: none;
+    margin-top: 10px;
+}
+.faq-item.active p {
+    display: block;
+}
+.faq-item:hover {
+    background: #007bff;
+    color: white;
+}
+
+/* Search Results Styling */
+.search-results {
+    margin-top: 2rem;
+    background: #007bff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.subject-result {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    text-decoration: none;
+    padding-left: 12px;
+    align-items: center;
+    justify-content: center;
+    color: orange;
+}
+
+.subject-result a {
+    color: #2a2d3b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.subject-result a:hover {
+    color: #3f51b5;
+}
+
+.subject-locked {
+    color: #6c757d;
+    cursor: pointer;
+    position: relative;
+}
+
+.subject-locked .fa-lock {
+    margin-left: 8px;
+    font-size: 0.8em;
+}
+
+.login-prompt {
+    display: none;
+    background: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    font-size: 0.9em;
+}
+
+.subject-locked:hover + .login-prompt {
+    display: block;
+}

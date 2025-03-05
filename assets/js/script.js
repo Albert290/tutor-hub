@@ -135,3 +135,18 @@ function animateCounters(card) {
     
     window.requestAnimationFrame(step);
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const faqItems = document.querySelectorAll(".faq-item");
+
+    faqItems.forEach((item) => {
+        item.addEventListener("click", function () {
+            faqItems.forEach((faq) => {
+                if (faq !== this) {
+                    faq.classList.remove("active");
+                }
+            });
+            this.classList.toggle("active");
+        });
+    });
+});

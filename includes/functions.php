@@ -58,3 +58,48 @@ function json_response($data, $status_code = 200) {
     echo json_encode($data);
     exit();
 }
+
+function is_logged_in() {
+    // Check if the user is logged in
+    // This typically involves checking for a session or a login cookie
+    session_start(); // Start the session if not already started
+    
+    // Check if the user is logged in based on your authentication method
+    // Example: Check if a user ID exists in the session
+    return isset($_SESSION['user_id']);
+}
+
+function get_user_role() {
+    // Check if session is not already started
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    // Return user role if logged in, otherwise return null
+    return isset($_SESSION['role']) ? $_SESSION['role'] : null;
+}
+
+// Optional: Add a login function
+function login($user_id) {
+    session_start();
+    $_SESSION['user_id'] = $user_id;
+}
+
+// Optional: Add a logout function
+function logout() {
+    // Start session if not already started
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    // Unset all session variables
+    $_SESSION = array();
+    
+    // Destroy the session
+    session_destroy();
+    
+    // Redirect to login page
+    header("Location: login.php");
+    exit();
+}
+?>

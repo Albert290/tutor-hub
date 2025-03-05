@@ -3,6 +3,12 @@ session_start();
 require_once 'includes/config.php'; 
 require_once 'includes/functions.php';
 
+if (!is_logged_in()) {
+    // Redirect to login if not logged in
+    header("Location: login.php");
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $reg_number = $_POST['reg_number'];
