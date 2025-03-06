@@ -1,7 +1,12 @@
 <?php
 session_start();
-require_once '../config/db.php';
-require_once 'includes/admin-auth.php';
+require_once '../includes/config.php'; // This initializes $pdo
+require_once '../includes/functions.php';
+
+// Debug: Check if $pdo is set
+if (!isset($pdo)) {
+    die("Database connection is not established.");
+}
 
 // Pagination settings
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -25,13 +30,13 @@ if (!empty($search)) {
 
 // Count total tutors
 $countQuery = "SELECT COUNT(*) as total FROM users $whereClause";
-$countStmt = $conn->prepare($countQuery);
+$countStmt = $pdo->prepare($countQuery); // Use $pdo instead of $conn
 if (!empty($search)) {
-    $countStmt->bind_param("ss", $search, $search);
+    $countStmt->execute([$search, $search]);
+} else {
+    $countStmt->execute();
 }
-$countStmt->execute();
-$totalTutors = $countStmt->get_result()->fetch_assoc()['total'];
-$countStmt->close();
+$totalTutors = $countStmt->fetchColumn();
 $totalPages = ceil($totalTutors / $limit);
 
 // Get tutors
@@ -44,16 +49,18 @@ $query = "
     ORDER BY u.created_at DESC
     LIMIT $limit OFFSET $offset
 ";
-$stmt = $conn->prepare($query);
+$stmt = $pdo->prepare($query); // Use $pdo instead of $conn
 if (!empty($search)) {
-    $stmt->bind_param("ss", $search, $search);
+    $stmt->execute([$search, $search]);
+} else {
+    $stmt->execute();
 }
-$stmt->execute();
-$result = $stmt->get_result();
-$stmt->close();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 require_once 'includes/admin-header.php';
 ?>
+
+<!-- Rest of your HTML code -->
 
 <main class="admin-main">
     <div class="container">

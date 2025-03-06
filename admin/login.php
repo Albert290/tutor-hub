@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Login error: " . $e->getMessage();
     }
 }
+include 'includes/admin-header.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="css/admin-styles.css">
 </head>
 <body>
-    <div class="admin-container">
+<div class="admin-container">
         <div class="admin-login-form">
             <div class="admin-logo">
                 <h1>Administrator Access</h1>

@@ -1254,8 +1254,10 @@ input, select, textarea {
     .btn-secondary {
         width: 50%;
         padding: 0.75rem 1.5rem;
+        margin-bottom: 80px;
     }
 }
+
 
 
 /* index sections*/

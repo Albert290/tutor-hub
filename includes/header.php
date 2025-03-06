@@ -12,7 +12,7 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
-            <a href="#" class="logo">StudyHub<span>Connect</span></a>
+            <a href="#" class="logo"><span>TUN Tutors</span>Connect</span></a>
             
             <div class="nav-links" id="navLinks">
                 <a href="#home">Home</a>
