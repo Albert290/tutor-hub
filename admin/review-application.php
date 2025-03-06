@@ -98,10 +98,7 @@ include 'includes/admin-header.php';
                         <span class="label">Phone:</span>
                         <span class="value"><?php echo htmlspecialchars($application['phone']); ?></span>
                     </div>
-                    <div class="detail-item">
-                        <span class="label">Year of Study:</span>
-                        <span class="value"><?php echo htmlspecialchars($application['year_of_study']); ?></span>
-                    </div>
+                   
                     <div class="detail-item">
                         <span class="label">Applied On:</span>
                         <span class="value"><?php echo date('M d, Y H:i', strtotime($application['submitted_at'])); ?></span>

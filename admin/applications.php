@@ -65,10 +65,7 @@ include 'includes/admin-header.php';
                             <span class="label">Reg Number:</span>
                             <span class="value"><?php echo htmlspecialchars($app['reg_number']); ?></span>
                         </div>
-                        <div class="detail-item">
-                            <span class="label">Year of Study:</span>
-                            <span class="value"><?php echo htmlspecialchars($app['year_of_study']); ?></span>
-                        </div>
+                        
                         <div class="detail-item">
                             <span class="label">Applied On:</span>
                             <span class="value"><?php echo date('M d, Y H:i', strtotime($app['submitted_at'])); ?></span>
