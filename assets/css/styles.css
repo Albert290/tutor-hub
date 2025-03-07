@@ -318,6 +318,12 @@ body {
     white-space: nowrap; /* Prevent text wrapping */
 }
 
+.search-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
 
 #searchBtn:hover {
     transform: translateY(-50%) scale(1.05);
@@ -790,14 +796,17 @@ small {
 
 .form-group {
     margin-bottom: 1.5rem;
+
 }
 
 input, select, textarea {
-    width: 100%;
+    width: 70%;
     padding: 0.8rem;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
+    left: 50%;
+    right: 50%;
 }
 
 .subjects-grid {
@@ -1015,6 +1024,22 @@ input, select, textarea {
     list-style: none;
     padding: 0;
     margin: 0;
+}
+
+#noteInput {
+    width: 80%;
+    margin-left: 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.quick-notes {  
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 .footer-links li {
@@ -1400,7 +1425,7 @@ h2 {
 }
 
 .subject-locked {
-    color: #6c757d;
+    color: yellow;
     cursor: pointer;
     position: relative;
 }
@@ -1421,4 +1446,379 @@ h2 {
 
 .subject-locked:hover + .login-prompt {
     display: block;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    z-index: 1000; /* Ensure it's on top of other elements */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out; /* Smooth fade-in animation */
+}
+
+/* Modal Heading */
+.modal-content h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Subject Name Display */
+#subjectNameDisplay {
+    font-size: 18px;
+    color: #4A90E2;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Prompt Text */
+.modal-content p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Links */
+.modal-content a {
+    color: #4A90E2;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.modal-content a:hover {
+    color: #357ABD; /* Darker blue on hover */
+    text-decoration: underline;
+}
+
+/* Close Button */
+.modal-content button {
+    padding: 10px 20px;
+    background-color: #4A90E2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.modal-content button:hover {
+    background-color: #357ABD; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.modal-content button:active {
+    transform: translateY(0); /* Reset lift effect on click */
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 20px;
+    }
+
+    #subjectNameDisplay {
+        font-size: 16px;
+    }
+
+    .modal-content p {
+        font-size: 14px;
+    }
+
+    .modal-content button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.study-materials-section {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    margin: 2rem auto;
+    max-width: 1200px;
+}
+
+.materials-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.catchy-text {
+    font-size: 1.1rem;
+    color: #495057;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 1rem auto;
+}
+
+/* Materials Grid */
+.materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.material-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #dee2e6;
+}
+
+.material-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.card-content {
+    text-align: center;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cta-button {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 8px 20px;
+    background: #4A90E2;
+    color: white;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.material-card:hover .cta-button {
+    background: #357ABD;
+}
+
+/* Additional Resources */
+.additional-resources {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.expand-btn {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.expand-btn:hover {
+    color: #4A90E2;
+}
+
+.hidden-resources {
+    display: none;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.resource-link {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #495057;
+    transition: transform 0.3s ease;
+}
+
+.resource-link:hover {
+    transform: translateX(5px);
+    color: #4A90E2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .study-materials-section {
+        padding: 1.5rem;
+    }
+
+    .materials-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .catchy-text {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .material-card {
+        padding: 1rem;
+    }
+
+    .card-icon {
+        font-size: 2rem;
+    }
+}
+
+.dashboard-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.stat-item {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: #666;
+}
+
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.subject-card {
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.subject-card:hover {
+    background-color: #d1d5db;
+}
+
+.edit-subject, .add-subject {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff;
+    padding: 0;
+    transition: color 0.2s ease-in-out;
+}
+
+.edit-subject:hover, .add-subject:hover {
+    color: #0056b3;
+}
+
+.school-announcements {
+    background-color: #f0f8ff;
+    border: 1px solid #add8e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.school-announcements h2 {
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.announcement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.announcement-card {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.announcement-card:hover {
+    transform: translateY(-3px);
+}
+
+.announcement-date {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.announcement-card h3 {
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.announcement-card p {
+    color: #555;
 }

@@ -15,7 +15,7 @@
             <a href="#" class="logo"><span>TUN Tutors</span>Connect</span></a>
             
             <div class="nav-links" id="navLinks">
-                <a href="#home">Home</a>
+                <a href="index.php">Home</a>
                 <a href="#features">Features</a>
                 <a href="#search">Find Tutors</a>
                 <div class="auth-buttons">

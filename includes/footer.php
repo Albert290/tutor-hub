@@ -28,6 +28,7 @@
                 <li><a href="/Innovation/login.php">Login</a></li>
                 <li><a href="/Innovation/tutor/dashboard.php">Tutor Dashboard</a></li>
                 <li><a href="/Innovation/student/dashboard.php">Student Dashboard</a></li>
+                <li><a href="/Innovation/admin/login.php">Admin login</a></li>
             </ul>
         </div>
 
@@ -36,8 +37,8 @@
             <h3 class="footer-title">Contact Us</h3>
             <ul class="footer-contact">
                 <li><i class="fas fa-envelope"></i> support@tutorconnect.com</li>
-                <li><i class="fas fa-phone"></i> +254 712 345 678</li>
-                <li><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</li>
+                <li><i class="fas fa-phone"></i> +254 115 726 301</li>
+                <li><i class="fas fa-map-marker-alt"></i> Tharaka Nithi</li>
             </ul>
         </div>
 

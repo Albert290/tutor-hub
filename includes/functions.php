@@ -59,10 +59,7 @@ function json_response($data, $status_code = 200) {
     exit();
 }
 
-function is_logged_in() {
-    // Check if the user is logged in
-    // This typically involves checking for a session or a login cookie
-    session_start(); // Start the session if not already started
+function is_logged_in() { 
     
     // Check if the user is logged in based on your authentication method
     // Example: Check if a user ID exists in the session

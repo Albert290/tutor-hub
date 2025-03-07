@@ -26,6 +26,7 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 if (!empty($search)) {
     $search = '%' . $search . '%';
     $whereClause .= " AND (reg_number LIKE ? OR email LIKE ?)";
+    $whereClause .= " AND (email LIKE ? OR phone LIKE ?)";
 }
 
 // Count total tutors
@@ -41,7 +42,7 @@ $totalPages = ceil($totalTutors / $limit);
 
 // Get tutors
 $query = "
-    SELECT u.user_id, u.reg_number, u.email, u.phone, u.year_of_study, 
+    SELECT u.user_id, u.reg_number, u.email, u.phone, 
            u.is_authorized, u.created_at, 
            (SELECT COUNT(*) FROM tutor_subjects WHERE tutor_id = u.user_id) as subject_count
     FROM users u
@@ -69,18 +70,18 @@ require_once 'includes/admin-header.php';
             <div class="filter-section">
                 <form action="" method="GET" class="filter-form">
                     <div class="form-group search-group">
-                        <input type="text" name="search" placeholder="Search by reg number or email" value="<?php echo htmlspecialchars($search ?? ''); ?>">
+                        <input type="text" name="search" placeholder="Search by email or phone" 
+                               value="<?php echo htmlspecialchars($search ?? ''); ?>">
                         <button type="submit" class="btn btn-sm btn-primary">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                     
                     <div class="form-group">
-                        <label for="authorized">Authorization:</label>
                         <select id="authorized" name="authorized" onchange="this.form.submit()">
-                            <option value="all" <?php echo $authFilter === 'all' ? 'selected' : ''; ?>>All Tutors</option>
-                            <option value="yes" <?php echo $authFilter === 'yes' ? 'selected' : ''; ?>>Authorized</option>
-                            <option value="no" <?php echo $authFilter === 'no' ? 'selected' : ''; ?>>Unauthorized</option>
+                            <option value="all" <?= $authFilter === 'all' ? 'selected' : '' ?>>All Tutors</option>
+                            <option value="yes" <?= $authFilter === 'yes' ? 'selected' : '' ?>>Authorized</option>
+                            <option value="no" <?= $authFilter === 'no' ? 'selected' : '' ?>>Unauthorized</option>
                         </select>
                     </div>
                 </form>
@@ -95,58 +96,59 @@ require_once 'includes/admin-header.php';
                             <tr>
                                 <th>Reg Number</th>
                                 <th>Email</th>
-                                <th>Phone</th>
-                                <th>Year</th>
+                                <th>Phone</th> 
                                 <th>Subjects</th>
-                                <th>Registered On</th>
+                                <th>Registered</th>
                                 <th>Status</th>
-                                <th class="text-center">Actions</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if ($result->num_rows > 0): ?>
-                                <?php while ($row = $result->fetch_assoc()): ?>
+                            <?php if (!empty($result)): ?>
+                                <?php foreach ($result as $row): ?>
                                     <tr>
-                                        <td><?php echo $row['reg_number']; ?></td>
-                                        <td><?php echo $row['email']; ?></td>
-                                        <td><?php echo $row['phone']; ?></td>
-                                        <td><?php echo $row['year_of_study']; ?></td>
-                                        <td><?php echo $row['subject_count']; ?></td>
-                                        <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
+                                        <td><?= htmlspecialchars($row['reg_number']) ?></td>
+                                        <td><?= htmlspecialchars($row['email']) ?></td>
+                                        <td><?= htmlspecialchars($row['phone']) ?></td> 
+                                        <td><?= $row['subject_count'] ?></td>
+                                        <td><?= date('M d, Y', strtotime($row['created_at'])) ?></td>
                                         <td>
-                                            <?php if ($row['is_authorized']): ?>
-                                                <span class="status-badge status-approved">Authorized</span>
-                                            <?php else: ?>
-                                                <span class="status-badge status-pending">Unauthorized</span>
-                                            <?php endif; ?>
+                                            <span class="status-badge <?= $row['is_authorized'] ? 'status-approved' : 'status-pending' ?>">
+                                                <?= $row['is_authorized'] ? 'Authorized' : 'Unauthorized' ?>
+                                            </span>
                                         </td>
-                                        <td class="text-center actions-column">
+                                        <td>
                                             <div class="action-buttons">
-                                                <a href="tutor-details.php?id=<?php echo $row['user_id']; ?>" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-eye"></i> View
+                                                <a href="tutor-details.php?id=<?= $row['user_id'] ?>" 
+                                                   class="btn btn-primary">
+                                                    <i class="fas fa-eye"></i>
+                                                    <span class="action-text">View</span>
                                                 </a>
-                                                
                                                 <?php if ($row['is_authorized']): ?>
-                                                    <form action="toggle-authorization.php" method="POST" class="d-inline">
-                                                        <input type="hidden" name="tutor_id" value="<?php echo $row['user_id']; ?>">
+                                                    <form method="POST" action="toggle-authorization.php">
+                                                        <input type="hidden" name="tutor_id" value="<?= $row['user_id'] ?>">
                                                         <input type="hidden" name="action" value="revoke">
-                                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to revoke authorization?')">
-                                                            <i class="fas fa-ban"></i> Revoke
+                                                        <button type="submit" class="btn btn-danger"
+                                                                onclick="return confirm('Revoke authorization?')">
+                                                            <i class="fas fa-ban"></i>
+                                                            <span class="action-text">Revoke</span>
                                                         </button>
                                                     </form>
                                                 <?php else: ?>
-                                                    <form action="toggle-authorization.php" method="POST" class="d-inline">
-                                                        <input type="hidden" name="tutor_id" value="<?php echo $row['user_id']; ?>">
+                                                    <form method="POST" action="toggle-authorization.php">
+                                                        <input type="hidden" name="tutor_id" value="<?= $row['user_id'] ?>">
                                                         <input type="hidden" name="action" value="authorize">
-                                                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Are you sure you want to authorize this tutor?')">
-                                                            <i class="fas fa-check"></i> Authorize
+                                                        <button type="submit" class="btn btn-success"
+                                                                onclick="return confirm('Authorize this tutor?')">
+                                                            <i class="fas fa-check"></i>
+                                                            <span class="action-text">Authorize</span>
                                                         </button>
                                                     </form>
                                                 <?php endif; ?>
                                             </div>
                                         </td>
                                     </tr>
-                                <?php endwhile; ?>
+                                <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
                                     <td colspan="8" class="text-center">No tutors found</td>
@@ -159,21 +161,23 @@ require_once 'includes/admin-header.php';
                 <?php if ($totalPages > 1): ?>
                     <div class="pagination">
                         <?php if ($page > 1): ?>
-                            <a href="?page=<?php echo $page - 1; ?>&authorized=<?php echo $authFilter; ?>&search=<?php echo urlencode($search); ?>" class="page-link">
-                                <i class="fas fa-angle-left"></i> Previous
+                            <a href="?page=<?= $page-1 ?>&authorized=<?= $authFilter ?>&search=<?= urlencode($search) ?>" 
+                               class="page-link">
+                                <i class="fas fa-chevron-left"></i> Prev
                             </a>
                         <?php endif; ?>
                         
                         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                            <a href="?page=<?php echo $i; ?>&authorized=<?php echo $authFilter; ?>&search=<?php echo urlencode($search); ?>" 
-                               class="page-link <?php echo $i === $page ? 'active' : ''; ?>">
-                                <?php echo $i; ?>
+                            <a href="?page=<?= $i ?>&authorized=<?= $authFilter ?>&search=<?= urlencode($search) ?>" 
+                               class="page-link <?= $i === $page ? 'active' : '' ?>">
+                                <?= $i ?>
                             </a>
                         <?php endfor; ?>
                         
                         <?php if ($page < $totalPages): ?>
-                            <a href="?page=<?php echo $page + 1; ?>&authorized=<?php echo $authFilter; ?>&search=<?php echo urlencode($search); ?>" class="page-link">
-                                Next <i class="fas fa-angle-right"></i>
+                            <a href="?page=<?= $page+1 ?>&authorized=<?= $authFilter ?>&search=<?= urlencode($search) ?>" 
+                               class="page-link">
+                                Next <i class="fas fa-chevron-right"></i>
                             </a>
                         <?php endif; ?>
                     </div>

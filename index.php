@@ -51,7 +51,7 @@ if(isset($_GET['unitSearch'])) {
             <h1>Tharaka University Tutors Hub.</h1>             
             <p>Find expert tutors in your course units or share your knowledge with peers</p>             
             
-            <form method="GET" class="search-container">                 
+            <form method="GET" class="search-container" id="search">              
                 <input type="text" name="unitSearch" id="unitSearch" placeholder="Search for a subject..." required>                 
                 <button type="submit" class="btn" id="searchBtn"><i class="fas fa-search"></i></button>             
             </form>                          
@@ -95,8 +95,8 @@ if(isset($_GET['unitSearch'])) {
     </div>
 </section>
 
-<div id="loginPromptModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
-    <div class="modal-content" style="background-color:white; margin:15% auto; padding:20px; border-radius:5px; width:300px; text-align:center;">
+<div id="loginPromptModal" class="modal">
+    <div class="modal-content">
         <h2>Access Restricted</h2>
         <p id="subjectNameDisplay"></p>
         <p>Please <a href="register.php" onclick="window.location.href='register.php'">login</a> or <a href="signup.php" onclick="window.location.href='register.php'">register</a> to access this subject.</p>
@@ -241,7 +241,7 @@ if(isset($_GET['unitSearch'])) {
     </div>
 </div>
     </section>
-
+   <?php include('includes/footer.php'); ?>
     <script>
 function openLoginModal() {
     // Assuming you have a function to open login modal
@@ -286,6 +286,25 @@ function openRegistrationModal() {
 function closeLoginPrompt() {
     document.getElementById('loginPromptModal').style.display = 'none';
 }
+
+// Function to open the modal
+function openLoginPrompt(subjectName) {
+    const modal = document.getElementById('loginPromptModal');
+    const subjectNameDisplay = document.getElementById('subjectNameDisplay');
+    
+    // Set the subject name in the modal
+    subjectNameDisplay.textContent = `Subject: ${subjectName}`;
+    
+    // Display the modal
+    modal.style.display = 'flex';
+}
+
+// Function to close the modal
+function closeLoginPrompt() {
+    const modal = document.getElementById('loginPromptModal');
+    modal.style.display = 'none';
+}
+  
 </script> 
 
     <script src="assets/js/script.js"></script>

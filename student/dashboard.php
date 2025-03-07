@@ -251,29 +251,6 @@ if (isset($_SESSION['request_error'])) {
 }
 ?>
 
-<!-- How It Works Section -->
-<section class="how-it-works">
-    <div class="containerr">
-        <h2>How Tutor Hub Works</h2>
-        <div class="steps-grid">
-            <div class="step">
-                <i class="fas fa-user-plus"></i>
-                <h3>1. Sign Up</h3>
-                <p>Create your free account and set up your profile.</p>
-            </div>
-            <div class="step">
-                <i class="fas fa-search"></i>
-                <h3>2. Find a Tutor</h3>
-                <p>Search by subject or tutor expertise and send requests.</p>
-            </div>
-            <div class="step">
-                <i class="fas fa-chalkboard-teacher"></i>
-                <h3>3. Start Learning</h3>
-                <p>Schedule a session and begin learning with your tutor.</p>
-            </div>
-        </div>
-    </div>
-</section>
 
 <div class="dashboard-content">
     <!-- Search Tutors Section -->
@@ -323,6 +300,79 @@ if (isset($_SESSION['request_error'])) {
         </div>
     </section>
 
+    <section class="study-materials-section">
+    <div class="materials-header">
+        <h2>📚 Your Learning Hub</h2>
+        <p class="catchy-text">Unlock your academic potential! Access past papers, find course resources, or let us guide you to the right materials. Whether you're cramming for exams or exploring new subjects, we've got you covered! 🚀</p>
+    </div>
+
+    <div class="materials-grid">
+        <!-- School Papers Access -->
+        <a href="http://repository.tharaka.ac.ke/xmlui/handle/1/1" class="material-card paper-resources">
+            <div class="card-content">
+                <div class="card-icon">📄</div>
+                <h3> TUN Library resources</h3>
+                <p>Access past exam papers, course notes, and study guides</p>
+                <div class="cta-button">Browse Materials →</div>
+            </div>
+        </a>
+
+        <!-- School Portal Gateway -->
+        <a href="https://students.tharaka.ac.ke/" class="material-card portal-guide">
+            <div class="card-content">
+                <div class="card-icon">🏫</div>
+                <h3>Course Navigator</h3>
+                <p>Not sure where to start? Explore your weak units from your school portal.</p>
+                <div class="cta-button">Visit School Portal →</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="additional-resources">
+        <button class="expand-btn" onclick="toggleResources()">More Learning Tools ▼</button>
+        <div class="hidden-resources">
+            <a href="/video-lectures" class="resource-link">🎥 Video Lectures</a>
+            <a href="/study-groups" class="resource-link">👥 Virtual Study Groups</a>
+            <a href="/tutor-match" class="resource-link">🧑🏫 Instant Tutor Match</a>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <div class="containerr">
+        <h2>How Tutor Hub Works</h2>
+        <div class="steps-grid">
+            <div class="step">
+                <i class="fas fa-user-plus"></i>
+                <h3>1. Sign Up</h3>
+                <p>Create your free account and set up your profile.</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-search"></i>
+                <h3>2. Find a Tutor</h3>
+                <p>Search by subject or tutor expertise and send requests.</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3>3. Start Learning</h3>
+                <p>Schedule a session and begin learning with your tutor.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+    <section class="quick-notes">
+    <h2>Quick Notes</h2>
+    <textarea id="noteInput" placeholder="Type your notes here..."></textarea>
+    <div class="button-group">
+        <button onclick="saveNote()">Save</button>
+        <button onclick="clearNote()">Clear</button>
+    </div>
+</section>
+
     <!-- Current Requests Section -->
     <section class="requests-section">
         <h2>Your Requests</h2>
@@ -350,14 +400,7 @@ if (isset($_SESSION['request_error'])) {
     </section>
 </div>
 
-<section class="quick-notes">
-    <h2>Quick Notes</h2>
-    <textarea id="noteInput" placeholder="Type your notes here..."></textarea>
-    <div class="button-group">
-        <button onclick="saveNote()">Save</button>
-        <button onclick="clearNote()">Clear</button>
-    </div>
-</section>
+
 
  
 
@@ -568,6 +611,13 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
             });
     }
 });
+
+function toggleResources() {
+    const resources = document.querySelector('.hidden-resources');
+    const btn = document.querySelector('.expand-btn');
+    resources.style.display = resources.style.display === 'grid' ? 'none' : 'grid';
+    btn.innerHTML = resources.style.display === 'grid' ? 'Hide Learning Tools ▲' : 'More Learning Tools ▼';
+}
 
 </script>
 
